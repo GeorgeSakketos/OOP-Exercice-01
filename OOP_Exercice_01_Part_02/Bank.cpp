@@ -180,3 +180,8 @@ void Bank::exit()
         }
 }
 
+int main()
+{
+    
+}
+
