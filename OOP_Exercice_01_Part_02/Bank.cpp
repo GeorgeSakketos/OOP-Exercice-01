@@ -56,7 +56,8 @@ bool Cashiers::is_free()
 
 class Bank
 {
-        int last_customer, curr_serving, K, L, lastServ;
+        int last_customer, curr_serving, lastServ;
+        int K = 0, L = 0;
         Cashiers* cashiersArray;
 
         bool check_to_open(int);
@@ -76,7 +77,7 @@ class Bank
 
 Bank::Bank(int k, int l)
 {   
-    K = K;
+    K = k;
     L = l;
 
     cashiersArray = new Cashiers[5];
@@ -94,9 +95,6 @@ Bank::~Bank()
 
 bool Bank::enter()
 {   
-    // cout << "Check to open: " << check_to_open(K) << "\n";
-    // cout << open_cashiers() << "\n";
-    // cout << last_customer - curr_serving << "\n";
     if (check_to_open(K))
     {
         for (int curCashier = 0; curCashier < 5; curCashier++)
@@ -128,7 +126,7 @@ void Bank::serve()
         int nextCashier = lastServ + 1;
         for (int curCashier = 0; curCashier < 5; curCashier++)
         {
-            if (nextCashier == 5)
+            if (nextCashier == 6)
                 nextCashier = 1;
             if (cashiersArray[nextCashier - 1].is_open() && cashiersArray[nextCashier - 1].is_free())
             {
@@ -154,7 +152,8 @@ void Bank::serve()
 
 void Bank::exit()
 {
-    if (check_to_close(K))
+    curr_serving++;
+    if (check_to_close(K)) 
     {
         for (int curCashier = 0; curCashier < 5; curCashier++)
             if (cashiersArray[curCashier].is_open())
@@ -163,17 +162,16 @@ void Bank::exit()
                 curCashier = 4;
             }
     }
-    curr_serving++;
 }
 
 bool Bank::check_to_open(int K)
 {
-    return (last_customer - curr_serving) > (open_cashiers() * K);
+    return waiting_customers() > (open_cashiers() * K);
 }
 
 bool Bank::check_to_close(int K)
 {
-    return (last_customer - curr_serving) <= ((open_cashiers() - 1) * K);
+    return waiting_customers() <= ((open_cashiers() - 1) * K);
 }
 
 void Bank::open(int Cashier)
@@ -223,8 +221,8 @@ int main(int argc, char** argv)
     for (int newCustomers = 0; newCustomers < M; newCustomers++)
     {
         int customersToServe = N;
-        if (N > K * 5)
-            customersToServe = K * 5;
+        if (N > (K * 5))
+            customersToServe = (K * 5);
 
         customersNotServed = N - customersToServe;
         
@@ -233,6 +231,17 @@ int main(int argc, char** argv)
         for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
             bank.serve();
 
-        // TO ADD THE REMAINING CUSTOMERS
+        while (customersNotServed > 0)
+        {
+            customersToServe = customersNotServed;
+            if (customersNotServed > K * 5)
+                customersToServe = K * 5;
+
+            for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
+                bank.enter();
+            for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
+                bank.serve();
+            customersNotServed -= customersToServe;
+        }
     }
 }
