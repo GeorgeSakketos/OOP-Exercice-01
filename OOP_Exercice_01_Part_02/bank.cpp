@@ -32,6 +32,7 @@ void Cashiers::serve()
     serving_flag = true;
 }
 
+// We only need cashierNum for cosmetic reasons, so we can show which cashier is overworked
 void Cashiers::free(int L, int cashierNum)
 {
     serving_flag = false;
@@ -56,6 +57,7 @@ bool Cashiers::is_free()
 
 class Bank
 {
+        // lastServ is used to keep which cashier was the last to server a customer
         int last_customer, curr_serving, lastServ;
         int K = 0, L = 0;
         Cashiers* cashiersArray;
@@ -99,6 +101,7 @@ bool Bank::enter()
     {
         for (int curCashier = 0; curCashier < 5; curCashier++)
         {
+            // If you find a closed cashier open and stop looking
             if (!cashiersArray[curCashier].is_open())
             {
                 open(curCashier + 1);
@@ -120,12 +123,14 @@ void Bank::serve()
     int chosenCashier = 1;
     if (open_cashiers() > 0)
     {
+        // Loop through the cashiers that have served
         if (lastServ > 4)
             lastServ = 0;
         
         int nextCashier = lastServ + 1;
         for (int curCashier = 0; curCashier < 5; curCashier++)
         {
+            // Loop through the available cashiers
             if (nextCashier == 6)
                 nextCashier = 1;
             if (cashiersArray[nextCashier - 1].is_open() && cashiersArray[nextCashier - 1].is_free())
@@ -138,6 +143,7 @@ void Bank::serve()
                 nextCashier++;
         }
     }
+    // If everything is closed open a new cashier
     else
     {
         open(chosenCashier);
@@ -226,11 +232,13 @@ int main(int argc, char** argv)
 
         customersNotServed = N;
         
+        cout << N / (K * 5) << "\n";
+
+        // Serve as many customers as you can using all the cashiers available
         for (int addCustomers = 0; addCustomers < (N / (K * 5)); addCustomers++)
         {
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.enter();
-            bank.enter();
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
             {
                 bank.serve();
@@ -238,6 +246,7 @@ int main(int argc, char** argv)
             }
         }
 
+        // Serve the remaining customers
         while (customersNotServed > 0)
         {
             customersToServe = customersNotServed;
@@ -246,7 +255,6 @@ int main(int argc, char** argv)
 
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.enter();
-            bank.enter();
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.serve();
             customersNotServed -= customersToServe;
