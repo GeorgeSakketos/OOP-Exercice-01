@@ -224,12 +224,18 @@ int main(int argc, char** argv)
         if (N > (K * 5))
             customersToServe = (K * 5);
 
-        customersNotServed = N - customersToServe;
+        customersNotServed = N;
         
-        for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
-            bank.enter();
-        for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
-            bank.serve();
+        for (int addCustomers = 0; addCustomers < (N / (K * 5)); addCustomers++)
+        {
+            for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
+                bank.enter();
+            for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
+            {
+                bank.serve();
+                customersNotServed--;
+            }
+        }
 
         while (customersNotServed > 0)
         {
