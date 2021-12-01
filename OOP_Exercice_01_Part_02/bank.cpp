@@ -230,6 +230,7 @@ int main(int argc, char** argv)
         {
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.enter();
+            bank.enter();
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
             {
                 bank.serve();
@@ -245,6 +246,7 @@ int main(int argc, char** argv)
 
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.enter();
+            bank.enter();
             for (int curCustomer = 0; curCustomer < customersToServe; curCustomer++)
                 bank.serve();
             customersNotServed -= customersToServe;
