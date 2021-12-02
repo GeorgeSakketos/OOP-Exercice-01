@@ -11,7 +11,7 @@ struct book
 
 class Bookcase
 {
-        int N_Max, K1, K2, L;
+        int N_Max, L;
         static const int shelvesInBookcase = 5;
         book** baseArray;
         int booksOnShelve [5] = {0, 0, 0, 0, 0};
@@ -19,23 +19,23 @@ class Bookcase
         void placeOnCabinet(int, book);
         void takeFromShelve(int);
         void takeFromCabinet(int);
+        void print_book(book);
         void destroyShelves();
         void destroyCabinet();
+        void destroyShelve(int);
+        void destroyCabinetShelve(int);
 
     public:
-        void initBookcase(int, int, int, int);
+        Bookcase(int, int);
         bool place_book(int, book);
-        bool take_book(int);
-        void print_book(book);
+        bool take_book(int); 
         void print_Shelve(int);
         void print_Cabinet_Shelve(int);
         void print_Bookcase();
-        void destroyShelve(int);
-        void destroyCabinetShelve(int);
-        void destroyBookcase();
+        ~Bookcase();
 };
 
-void Bookcase::initBookcase(int n_max, int l, int k1, int k2)
+Bookcase::Bookcase(int n_max, int l)
 {
     cout << "[BOOKCASE STATUS] Creating Bookcase" << "\n";
 
@@ -248,7 +248,7 @@ void Bookcase::destroyCabinet()
     delete [] baseArray[4];
 }
 
-void Bookcase::destroyBookcase()
+Bookcase::~Bookcase()
 {
     cout << "\n";
     destroyShelves();
@@ -262,9 +262,7 @@ void Bookcase::destroyBookcase()
 #include "bookcart.h"
 
 int main(int argc, char** argv)
-{
-    Bookcase bookcase;
-    
+{   
     if (argc != 5)
     {
         cout << "[ERROR] Insufficient Arguments! Give 4 arguments (N Max, L, K1, K2)" << "\n";
@@ -279,7 +277,7 @@ int main(int argc, char** argv)
     if (N_Max < L)
         L = N_Max;
 
-    bookcase.initBookcase(N_Max, L, K1, K2);
+    Bookcase bookcase(N_Max, L);
 
     // Add L books inside the bookcase
     int curShelve = 1;
@@ -317,8 +315,6 @@ int main(int argc, char** argv)
     }
 
     bookcase.print_Bookcase();
-
-    bookcase.destroyBookcase();
 
     return 0;
 }
